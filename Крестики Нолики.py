@@ -38,7 +38,13 @@ def start_game():
     draw_field() # Рисуем поле
 
     while step < 10 and (check_for_win() == False): # Игра продолжается, пока не сделано 9 ходов
-        number = input("Player's turn: " + current_player + ". Enter field's number(0-9): ")
+        verify = 0
+        while verify != 1:
+            number = input("Player's turn: " + current_player + ". Enter field's number(0-9): ")
+            if str(number).isdigit():
+                verify = 1
+            else:
+                print("Try Again!")
         # Проверка на выход из игры
         if number == 0:
             break
