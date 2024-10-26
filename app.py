@@ -13,7 +13,7 @@ def draw_field():
 # Функция для обработки хода игрока
 def steps(number, char):
     # Проверяем, корректен ли ввод и не занята ли клетка
-    if number > 10 or number < 1 or field[number - 1] in ("X", "O"):
+    if number > 9 or number < 1 or field[number - 1] in ("X", "O"):
         return False
     field[number - 1] = char # Записываем символ игрока в поле
     return True
@@ -26,42 +26,38 @@ def check_for_win():
                             (2, 4, 6), (0, 3, 6), (1, 4, 7), (2, 5, 8))
     # Проверяем, есть ли совпадения по текущей комбинации
     for position in combinations_for_win:
-        if field[position[0]] == field[position[1]] and field[position[1]] == field[position[2]]:
-            win_or_lose = field[position[0]] # Возвращаем выигравший символ
-
-
-    return win_or_lose
+        if field[position[0]] == field[position[1]] == field[position[2]]:
+            return field[position[0]]
 # Функция для запуска игры
 def start_game():
     current_player = "X" # Начинает игрок "X"
     step = 1 # Счетчик ходов
     draw_field() # Рисуем поле
 
-    while step < 10 and (check_for_win() == False): # Игра продолжается, пока не сделано 9 ходов
-        verify = 0
-        while verify != 1:
-            number = input("Player's turn: " + current_player + ". Enter field's number(0-9): ")
-            if str(number).isdigit():
-                verify = 1
+    while step < 9:
+        while True:
+            number = input("Player's turn: {current_player}. Enter field's number(0-9): ")
+            if number.isdigit() and (0 <= int (number) <= 9):
+                number = int(number)
+                break
             else:
                 print("Try Again!")
         # Проверка на выход из игры
         if number == 0:
-            break
-        if steps(int(number), current_player):
-            if current_player == "X": # Меняем текущего игрока
-                current_player = "O"
-            else:
-                current_player = "X"
+            print("Game Over!")
+            return
+        if steps(number, current_player):
+            step += 1
             draw_field()
-            step += 1 # Увеличиваем счетчик ходов
+            winner = check_for_win()
+            if winner:
+                print(f"{winner} Wins!")
+                print("Game Over!")
+                return
+            current_player = "0" if current_player == "X" else "X"       
         else:
-            print("Wrong number! Try Again!") # Если ход некорректный
-    if step == 10:
-        print("Game Over! Draw!") # Если все ходы сделаны, и нет победителя
-    else:
-        print(check_for_win() + " Wins!") # Объявляем победителя
-        print("Game Over!")
+           print("Wrong number! Try Again!") # Если ход некорректный
+    print("Game Over! Draw!") # Если все ходы сделаны, и нет победителя
 
 print("Welcome to the Tic Tac Toe!")
 start_game()
